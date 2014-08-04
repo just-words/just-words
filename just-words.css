@@ -1,0 +1,47 @@
+.container {
+ width: 66%;
+ padding: 5px;
+}
+.centered {
+ margin: 0 auto !important;
+}
+.messagebox {
+ display: none;
+ border: 1px solid;
+ margin: 10px 0px;
+ padding: 15px 10px 15px 70px;
+ background-repeat: no-repeat;
+ background-position: 10px center;
+ background-size: 50px 50px;
+}
+.infobox {
+ color: #00529B;
+ background-color: #BDE5F8;
+ background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/35/Information_icon.svg');
+}
+.errorbox {
+ color: #D8000C;
+ background-color: #FFBABA;
+ background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/97/Dialog-error-round.svg');
+}
+.closebox {
+ float: right;
+ padding-top: 10px;
+}
+.fineprint {
+ clear: both;
+ padding-top: 1em;
+ text-align: center;
+ width: 33%;
+ font-size: 75%;
+}
+.stats {
+ display: inline-block;
+ width: 275px;
+ height: 275px;
+}
+#stats {
+ clear: both;
+ display: none;
+ text-align: center;
+}
