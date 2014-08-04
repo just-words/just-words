@@ -3,39 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <title>just-words | fimfiction stats</title> 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="just-words.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="//www.google.com/jsapi"></script>
+<script>google.load('visualization','1',{packages:['corechart']});</script>
+<script type="text/javascript" src="just-words.js"></script>
+<link rel="stylesheet" type="text/css" href="just-words.css">
 </head>
 <body>
-<div id="container" style="width:66%;margin-left:auto;margin-right:auto;padding:5px;">
-<div id="error" style="border:1px solid;color:#D8000C;background-color:#FFBABA;margin:10px 0px;padding:15px 10px 15px 70px;background-repeat:no-repeat;background-position:10px center;background-image:url('https://upload.wikimedia.org/wikipedia/commons/9/97/Dialog-error-round.svg');background-size: 50px 50px;display:none;">
-<strong>ERROR:</strong> Could not load story. Check the Story ID and try again.
-</div>
-<div id="notice" style="border:1px solid;color:#00529B;background-color:#BDE5F8;margin:10px 0px;padding:15px 10px 15px 70px;background-repeat:no-repeat;background-position:10px center;background-image:url('https://upload.wikimedia.org/wikipedia/commons/3/35/Information_icon.svg');background-size: 50px 50px;">
-<strong>SORRY:</strong> I would put in automatic reading of user stories list and favorites list, but there isn't an API for that. Get on it, <a href="https://www.fimfiction.net/user/knighty">knighty</a>.
-<a onclick="$('#notice').hide('slow');" style="float:right;padding-top:10px;">&#10006;</a>
-</div>
+<div class="container centered">
+<div id="error" class="messagebox errorbox"></div>
+<div id="notice" class="messagebox infobox"><strong>SORRY:</strong> I would put in automatic reading of user stories list and favorites list, but there isn't an API for that. Get on it, <a href="//www.fimfiction.net/user/knighty">knighty</a>.
+<a onclick="$('#notice').hide('slow');" class="closebox">&#10006;</a></div>
 <div id="addstory">
 <span id="stories"></span><br />
-<input id="addedstory" type="number" maxlength="7" placeholder="Story ID" value="" autofocus>
+<input id="addedstory" type="number" maxlength="7" placeholder="Story/User ID" value="" autofocus>
 <input type="button" value="Add Story" onclick="addStory()">
-&nbsp;&nbsp;|&nbsp;&nbsp;
 <input type="button" value="Calculate Stats" onclick="stat()">
 <input type="button" value="Clear Stats" onclick="clearStat()">
 <small style="float:right;">I read at <input id="wpm" type="number" placeholder="Try 275." value="275" size="5" required>words per minute.</small>
 </div>
-<div id="stats" style="display:none;text-align:center;">You have read <span id="total_words"></span> words. This would take you <span id="word_time"></span> to read. <span id="completness"></span> of the stories you have read are complete, while <span id="incompletness"></span> are incomplete*. Stories you read have a total of <span id="likes"></span> likes and a total of <span id="dislikes"></span> dislikes.
+<div id="stats">There is <span id="total_words"></span> words over a total of <span id="total_chapters"></span> chapters. This would take you about <span id="word_time"></span> to read.<br />
+<div id="stats_rating" class="stats centered"></div>
+<div id="stats_words_individual" class="stats centered"></div>
+<div id="stats_completness" class="stats centered"></div>
+<div id="stats_ratings" class="stats centered"></div>
+<div id="stats_genres" class="stats centered"></div>
 </div>
 </div>
-<br />
-<div class="fineprint" style="text-align:center;width:33%;margin-left:auto;margin-right:auto;font-size:75%;">* Other stories may be "On Hiatus" or "Cancelled".
+<div class="fineprint centered">
+<a href="#" onclick="$('#notice').show('slow')">Why isn't there any autofill from favorites or published stories or the featured list?</a>
+<br /><a href="#" onclick="loadSample()">Load some sample data for me.</a>
 <br />
 <small>
-Copyright &copy; 2014 just-words. This Source Code Form is subject to the terms of the Mozilla Public License, v.2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <a href="http://mozilla.org/MPL/2.0/">http://mozilla.org/MPL/2.0/</a>.
+Copyright &copy; 2014 just-words. This Source Code Form is subject to the terms of the Mozilla Public License, v.2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <a href="//mozilla.org/MPL/2.0/">mozilla.org/MPL/2.0/</a>. See <a href="//github.com/just-words/just-words">github</a> for source download and bugs. Please note that this website is in <strong>no way</strong> affliliated with Fimfiction.
 <br /> Information icon by El T [Public domain], 
-<a href="https://commons.wikimedia.org/wiki/File:Information_icon.svg">via Wikimedia Commons.</a>
-<br />Error icon by Xander [<a href="http://creativecommons.org/licenses/by-sa/2.5">CC-BY-SA-2.5</a>], 
-<a href="https://commons.wikimedia.org/wiki/File%3ADialog-error-round.svg">via Wikimedia Commons.</a>
+<a href="//commons.wikimedia.org/wiki/File:Information_icon.svg">via Wikimedia Commons.</a>
+<br />Error icon by Xander [<a href="//creativecommons.org/licenses/by-sa/2.5">CC-BY-SA-2.5</a>], 
+<a href="//commons.wikimedia.org/wiki/File%3ADialog-error-round.svg">via Wikimedia Commons.</a>
 </small>
 </div>
 </body>
