@@ -5,6 +5,13 @@
 .centered {
  margin: 0 auto !important;
 }
+.right {
+ float: right;
+}
+.options {
+ display: none;
+ text-align: right;
+}
 .messagebox {
  display: none;
  border: 1px solid;

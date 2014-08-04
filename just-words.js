@@ -36,16 +36,20 @@ function addStory() {
    g_alternate = data.story.categories['Alternate Universe'];
    g_human = data.story.categories.Human;
    g_anthro = data.story.categories.Anthro;
+   views = data.story.views;
    stories.push([name, words, status, likes, dislikes, chapters, rating, 
                 [g_romance, g_tragedy, g_sad, g_dark, g_comedy, g_random, 
                  g_crossover, g_adventure, g_slice, g_alternate, g_human,
-                 g_anthro]]);
+                 g_anthro], views]);
    $("#stories").html($("#stories").html() + name + 
     "&nbsp;<a title=\"Remove Story\" onclick=\"removeStory("
     + stories.length + ")\">&#10006;</a>, ");
   })
   .fail(function () { $("#error").show("slow"); });
  $("#addedstory").val("");
+}
+function addFeatured() {
+ 
 }
 function removeStory(id) {
  var i;
@@ -63,12 +67,35 @@ function clearStat() {
  $("#stats").hide('slow');
  while (stories.length > 0) { stories.pop(); }
 }
+function toggleOptions() {
+ if($('.options').css("display") === "none") {
+  $('.options').show('slow');
+  $('.toggleOptions').html("&#9650;");
+ } else {
+  $('.options').hide('slow');
+  $('.toggleOptions').html("&#9660;");
+ }
+}
+function getChartType(location) {
+ if($('#chartType').val() === 'pie')
+  return new google.visualization.PieChart(location);
+ else if($('#chartType').val() === 'bar')
+  return new google.visualization.BarChart(location);
+ else if($('#chartType').val() === 'column')
+  return new google.visualization.ColumnChart(location);
+ else if($('#chartType').val() === 'area')
+  return new google.visualization.SteppedAreaChart(location);
+}
 function stat() {
  var words = 0, complete = 0, incomplete = 0, hiatus = 0, cancelled = 0, likes = 0, dislikes = 0, chapters = 0,
-     storieslen = [['Story', 'Words']], everyone = 0, teen = 0, mature = 0, g_romance = 0, 
+     storieslen = [['Story', 'Words']], viewslen = [['Story', 'Views']], everyone = 0, teen = 0, mature = 0, g_romance = 0, 
        g_tragedy = 0, g_sad = 0, g_dark = 0, g_comedy = 0, g_random = 0, g_crossover = 0,
        g_adventure = 0, g_slice = 0, g_alternate = 0, g_human = 0, g_anthro = 0, i;
- if($("#wpm").val() < 1) {
+ if(stories.length < 1) {
+  $("#error").html("<strong>ERROR:</strong> No stories to statisticify.")
+  $("#error").show("slow");
+  return;
+ } else if($("#wpm").val() < 1) {
   $("#error").html("<strong>ERROR:</strong> Please learn how to read before using just-words.")
   $("#error").show("slow");
   return;
@@ -96,6 +123,7 @@ function stat() {
   g_human = g_human + stories[i][7][10];
   g_anthro = g_anthro + stories[i][7][11];
   storieslen.push([stories[i][0],Number(stories[i][1])]);
+  viewslen.push([stories[i][0],Number(stories[i][8])]);
   if (stories[i][2] === "Complete") { complete = complete + 1;
    } else if (stories[i][2] === "Incomplete") { incomplete = incomplete + 1;
    } else if (stories[i][2] === "On Hiatus") { hiatus = hiatus + 1;
@@ -123,13 +151,13 @@ function stat() {
   title: 'Completness',
   legend: 'none'
  };
- var completnesschart = new google.visualization.PieChart($('#stats_rating')[0]);
+ var completnesschart = getChartType($('#stats_completeness')[0]);
  var wordsearch = google.visualization.arrayToDataTable(storieslen);
  var wordsearchOptions = {
   title: 'Word Breakdown',
   legend: 'none'
  };
- var wordsearchchart = new google.visualization.PieChart($('#stats_words_individual')[0]);
+ var wordsearchchart = getChartType($('#stats_words_individual')[0]);
  var likesVdislikes = google.visualization.arrayToDataTable([
   ['Likes', 'Number'],
   ['Likes', likes],
@@ -143,7 +171,7 @@ function stat() {
    1: { color: '#952525' }
   }
  };
- var likesVdislikeschart = new google.visualization.PieChart($('#stats_completness')[0]);
+ var likesVdislikeschart = getChartType($('#stats_likes')[0]);
  var ratings = google.visualization.arrayToDataTable([
   ['Rating', 'Number'],
   ['Everyone', everyone],
@@ -159,7 +187,7 @@ function stat() {
    2: { color: '#C73838' }
   }
  };
- var ratingschart = new google.visualization.PieChart($('#stats_ratings')[0]);
+ var ratingschart = getChartType($('#stats_ratings')[0]);
  var genre = google.visualization.arrayToDataTable([
   ['Genre', 'Number'],
   ['Romance', g_romance],
@@ -193,18 +221,25 @@ function stat() {
    11: { color: '#B5695A' }
   }
  };
- var genrechart = new google.visualization.PieChart($('#stats_genres')[0]);
+ var genrechart = getChartType($('#stats_genres')[0]);
+ var view = google.visualization.arrayToDataTable(viewslen);
+ var viewOptions = {
+  title: 'Popularity (by views)',
+  legend: 'none'
+ };
+ var viewchart = getChartType($('#stats_popularity')[0]);
  completnesschart.draw(completness, completnessOptions);
  wordsearchchart.draw(wordsearch, wordsearchOptions);
  likesVdislikeschart.draw(likesVdislikes, likesVdislikesOptions);
  ratingschart.draw(ratings, ratingsOptions);
  genrechart.draw(genre, genreOptions);
+ viewchart.draw(view, viewOptions);
 }
 function loadSample() {
- stories.push(["Sample Story 1", 66711, "Cancelled", 1, 24, 10, 2, [true, false, false, false, true, false, false, false, true, false, false, false]]);
- stories.push(["Sample Story 2", 2997, "Complete", 12, 1, 1, 0, [false, true, false, false, false, true, false, false, false, true, false, false]]);
- stories.push(["Sample Story 3", 271828, "Incomplete", 3141, 592, 123, 1, [false, false, true, false, false, false, true, false, false, false, true, false]]);
- stories.push(["Sample Story 4", 0, "On Hiatus", 0, 5, 0, 0, [false, false, false, true, false, false, false, true, false, false, false, true]]);
+ stories.push(["Sample Story 1", 66711, "Cancelled", 1, 24, 10, 2, [true, false, false, false, true, false, false, false, true, false, false, false], 8]);
+ stories.push(["Sample Story 2", 2997, "Complete", 12, 1, 1, 0, [false, true, false, false, false, true, false, false, false, true, false, false], 159]);
+ stories.push(["Sample Story 3", 271828, "Incomplete", 3141, 592, 123, 1, [false, false, true, false, false, false, true, false, false, false, true, false], 2801]);
+ stories.push(["Sample Story 4", 0, "On Hiatus", 0, 5, 0, 0, [false, false, false, true, false, false, false, true, false, false, false, true], 3145]);
  for (i = 0; i < stories.length; i++) {
   $("#stories").html($("#stories").html() + stories[i][0] + 
    "&nbsp;<a title=\"Remove Story\" onclick=\"removeStory(" + i +
